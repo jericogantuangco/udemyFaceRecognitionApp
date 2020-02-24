@@ -1,48 +1,60 @@
 import React from 'react';
 
-class Signin extends React.Component {
+class Register extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            signInEmail: '',
-            signinPassword: ''
+            email: '',
+            password: '',
+            name:''
         }
     }
 
     onEmailChange = (event) => {
-        this.setState({signInEmail: event.target.value})
+        this.setState({email: event.target.value})
     }
 
     onPasswordChange = (event) => {
-        this.setState({signinPassword: event.target.value});
+        this.setState({password: event.target.value});
+    }
+
+    onNameChange = (event) => {
+        this.setState({name: event.target.value});
     }
 
     onSubmitSignin = () => {
         const {onRouteChange, loadUser} = this.props
-        fetch('http://localhost:3500/signin', {
+        fetch('http://localhost:3500/register', {
             method: 'post',
             headers: {'Content-Type' : 'application/json'},
             body : JSON.stringify({
-                email: this.state.signInEmail,
-                password: this.state.signinPassword
+                email: this.state.email,
+                password: this.state.password,
+                name: this.state.name
             })
         })
         .then(response => response.json())
         .then(user => {
-            if(user.id){
-                loadUser(user);
+            if(user){
+                loadUser(user)
                 onRouteChange('home');
             }
         })
     }
     render(){
-        const {onRouteChange} = this.props
         return (
             <article className="br3 shadow-5 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw5 center">
-                <main className="pa4 black-80">
+                <main className="pa5 black-80">
                     <div className="measure" >
                         <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-                            <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+                            <legend className="f1 fw6 ph0 mh0">Register</legend>
+                            <div className="mt3">
+                                <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
+                                <input 
+                                onChange={this.onNameChange}
+                                className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="text" name="Name"  id="name" />
+                            </div>
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                                 <input 
@@ -57,16 +69,13 @@ class Signin extends React.Component {
                             </div>
                         </fieldset>
                         <div className="">
-                            <input onClick={this.onSubmitSignin} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in" />
-                        </div>
-                        <div className="lh-copy mt3">
-                            <p onClick={() => onRouteChange('register')}href="#0" className="f6 link dim black db pointer">Register</p>
+                            <input onClick={this.onSubmitSignin} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib pointer" type="submit" value="Register" />
                         </div>
                     </div >
                 </main>
             </article>
-        );
+        )
     }
 }
 
-export default Signin;
+export default Register;
